@@ -90,6 +90,42 @@ defmodule Ingest.Requests.RequestSearch do
   end
 end
 
+defmodule Ingest.Requests.RequestProjectSearch do
+  @moduledoc """
+  Reflects the virtual table for FTS5 trigram searching.
+  """
+  use Ecto.Schema
+
+  @primary_key false
+  schema "request_project_search" do
+    field :rowid, :integer
+    field :id, :binary_id
+    field :project_id, :binary_id
+    field :project_name, :string
+    field :name, :string
+    field :description, :string
+    field :rank, :float, virtual: true
+  end
+end
+
+defmodule Ingest.Requests.CompositeSearch do
+  @moduledoc """
+  Reflects the virtual table for FTS5 trigram searching.
+  """
+  use Ecto.Schema
+
+  @primary_key false
+  schema "composite_search" do
+    field :rowid, :integer
+    field :id, :binary_id
+    field :project_id, :binary_id
+    field :project_name, :string
+    field :name, :string
+    field :description, :string
+    field :rank, :float, virtual: true
+  end
+end
+
 defmodule Ingest.Requests.RequestTemplates do
   @moduledoc """
   This structure allows us to add more data to the join of templates to

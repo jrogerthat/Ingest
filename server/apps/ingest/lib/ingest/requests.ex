@@ -7,6 +7,8 @@ defmodule Ingest.Requests do
   require Logger
   alias Ingest.Requests.RequestDestination
   alias Ingest.Requests.RequestSearch
+  alias Ingest.Requests.RequestProjectSearch
+  Ingest.Requests.CompositeSearch
   alias Ingest.Projects.ProjectSearch
   alias Ingest.Requests.TemplateSearch
   alias Ingest.Uploads.Upload
@@ -466,34 +468,45 @@ Search Requests by Request and Project Names
     else
       search_term = String.replace(search_term, " ", "")
 
-      query_r =
+      query =
         from r in Request,
-          join: rs in RequestSearch,
-          on: rs.id == r.id,
+          join: rp in CompositeSearch,
+          on: rp.id == r.id,
           where:
-            fragment("requests_search MATCH ?", ^search_term) and
+            (fragment("composite_search MATCH ?", ^search_term)) and
             r.status == :published and
             r.visibility == :public,
           select: r
 
-      query_p =
-        from r in Request,
-          join: p in Project,
-          on: p.id == r.project_id,
-          join: ps in ProjectSearch,
-          on: ps.id == p.id,
-          where:
-            fragment("projects_search MATCH ?", ^search_term) and
-            r.status == :published and
-            r.visibility == :public,
-          select: r
-      # Get both query results
-      results_requests = Repo.all(query_r)
-      results_projects = Repo.all(query_p)
+      Logger.info(inspect(query))
 
-      # Combine the results and remove duplicates by request id
-      results = Enum.uniq(results_requests ++ results_projects, fn r -> r.id end)
-      Repo.preload(results, :project)
+      results = Repo.all(query)
+
+      # query_r =
+      #   from r in Request,
+      #     join: rs in RequestSearch,
+      #     on: rs.id == r.id,
+      #     where:
+      #       fragment("requests_search MATCH ?", ^search_term) and
+      #       r.status == :published and
+      #       r.visibility == :public,
+      #     select: r
+
+      # query_p =
+      #   from r in Request,
+      #     join: p in Project,
+      #     on: p.id == r.project_id,
+      #     join: ps in ProjectSearch,
+      #     on: ps.id == p.id,
+      #     where:
+      #       fragment("projects_search MATCH ?", ^search_term) and
+      #       r.status == :published and
+      #       r.visibility == :public,
+      #     select: r
+      # # Get both query results
+      # results_requests = Repo.all(query_r)
+      # Repo.all(query)
+      |> Repo.preload(:project)
     end
   end
 
