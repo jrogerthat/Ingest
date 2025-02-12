@@ -25,9 +25,10 @@ defmodule IngestWeb.TemplateBuilderLive do
         <h3 class="text-base font-semibold leading-6 text-gray-900">Form Builder</h3>
       </div>
     </div>
-
-    <div class="flex flex-row">
-      <div class="basis-1/3">
+<!-- Start field wrap -->
+    <div class="flex flex-row bg-red-300">
+    <!-- Start field list -->
+      <div class="basis-1/3 bg-green-300">
         <.link
           patch={~p"/dashboard/templates/#{@template.id}/new"}
           type="button"
@@ -103,7 +104,8 @@ defmodule IngestWeb.TemplateBuilderLive do
           </li>
         </ul>
       </div>
-
+      <!-- end field list -->
+      <!-- Start field creator -->
       <div :if={!@field} class="bg-gray-800 p-8 basis-2/3 h-screen ml-10">
         <div class="text-center">
           <svg
