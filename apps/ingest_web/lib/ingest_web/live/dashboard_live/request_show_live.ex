@@ -450,11 +450,15 @@ defmodule IngestWeb.RequestShowLive do
                     </div>
                   </td>
                 </tr>
+                <!-- START HERE FOR TEMPLATE PARAM CHANGE-->
                 <tr :for={template <- @request_templates}>
                   <td class="p-0 pb-4 pr-6">
                     <div class="py-4 pr-6 text-sm font-semibold leading-6 text-gray-900">
                       {template.name}
                     </div>
+                    <p class="text-xs text-gray-600">
+                      Assigned Parameter: <%= Ingest.Requests.get_name_fields!(template.id) %>
+                    </p>
                   </td>
                   <td class="relative w-14 p-0">
                     <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
@@ -498,7 +502,7 @@ defmodule IngestWeb.RequestShowLive do
         </div>
         <!-- STATUS -->
       </div>
-      
+
     <!-- Start Name Section -->
       <div class="grid grid-cols-1">
         <div>
